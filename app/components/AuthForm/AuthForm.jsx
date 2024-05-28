@@ -17,7 +17,7 @@ export const AuthForm = (props) => {
     e.preventDefault();
     const userData = await authorize(endpoints.auth, authData);
     if (isResponseOk(userData)) {
-      authContext.login({ ...userData, id: userData._id }, userData.jwt);
+      authContext.login({...userData, id: userData._id}, userData.jwt);
       setMessage({ status: "success", text: "Вы авторизовались!" });
     } else {
       setMessage({ status: "error", text: "Неверные почта или пароль" });
@@ -40,12 +40,12 @@ export const AuthForm = (props) => {
         <label className={Styles["form__field"]}>
           <span className={Styles["form__field-title"]}>Email</span>
           <input
-            onInput={handleInput}
-            className={Styles["form__field-input"]}
-            name="email"
-            type="email"
-            placeholder="hello@world.com"
-          />
+  onInput={handleInput}
+  className={Styles["form__field-input"]}
+  name="email"
+  type="email"
+  placeholder="hello@world.com"
+/>
         </label>
         <label className={Styles["form__field"]}>
           <span className={Styles["form__field-title"]}>Пароль</span>
