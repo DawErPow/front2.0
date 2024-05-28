@@ -1,16 +1,13 @@
 import Styles from "./Popup.module.css";
-import { useEffect,useState } from "react";
-import { authorize } from "@/app/api/api-utils";
-import { endpoints } from "@/app/api/config";
 
 export const Popup = (props) => {
-  useEffect(() => {
-    authorize(endpoints.auth, {identifier: 'aski@example.com', password: 'ilovehtml'})
-      .then(res => console.log(res))
-  }, [])
   return (
-    <div className={`${Styles["popup"]} ${props.popupIsOpened && Styles["popup_is-opened"]}`}>
-      <button className={Styles["close"]} onClick={props.closePopup}>
+    <div
+      className={`${Styles["popup"]} ${
+        props.isOpened && Styles["popup_is-opened"]
+      }`}
+    >
+      <button className={Styles["close"]} onClick={() => props.close()}>
         <svg
           className={Styles["close-icon"]}
           xmlns="http://www.w3.org/2000/svg"
