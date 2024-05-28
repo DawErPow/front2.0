@@ -1,40 +1,48 @@
-"use client";
+"use client"
 import Styles from "./AuthForm.module.css";
 import { useState, useEffect } from "react";
-import { endpoints } from "@/app/api/config";
 import { authorize } from "@/app/api/api-utils";
+import { endpoints } from "@/app/api/config";
 import { isResponseOk } from "@/app/api/api-utils";
 import { useStore } from "@/app/store/app-store";
 
-export const AuthForm = (props) => {
-  const authContext = useStore();
+export const AuthForm = (props) => { 
   const [authData, setAuthData] = useState({ email: "", password: "" });
-  const [message, setMessage] = useState({ status: null, text: null });
-  const handleInput = (e) => {
-    setAuthData({ ...authData, [e.target.name]: e.target.value });
+  const [message, setMessage] = useState({ status: null, text: null }); 
+  const authContext = useStore()
+
+  const handleLogout = () => {
+    authContext.logout(); 
   };
+
+  useEffect(() => {
+    let timer; 
+    if(authContext.user) {
+      timer = setTimeout(() => {
+        setMessage({ status: null, text: null});
+        props.close();
+      }, 1000);
+    }
+    return () => clearTimeout(timer);
+  }, [authContext.user]);
+ 
+  const handleInput = (e) => { 
+    setAuthData({ ...authData, [e.target.name]: e.target.value }); 
+  }; 
+ 
   const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = await authorize(endpoints.auth, authData);
-    if (isResponseOk(userData)) {
+    if(isResponseOk(userData)) {
       authContext.login({...userData, id: userData._id}, userData.jwt);
       setMessage({ status: "success", text: "Вы авторизовались!" });
     } else {
       setMessage({ status: "error", text: "Неверные почта или пароль" });
     }
   };
-  useEffect(() => {
-    let timer;
-    if (authContext.user) {
-      timer = setTimeout(() => {
-        setMessage({ status: null, text: null });
-        props.close();
-      }, 1000);
-    }
-    return () => clearTimeout(timer);
-  }, [authContext.user]);
+
   return (
-    <form onSubmit={handleSubmit} className={Styles["form"]}>
+    <form onSubmit={handleSubmit} className={Styles["form"]} name="form">
       <h2 className={Styles["form__title"]}>Авторизация</h2>
       <div className={Styles["form__fields"]}>
         <label className={Styles["form__field"]}>
@@ -52,8 +60,8 @@ export const AuthForm = (props) => {
           <input
             onInput={handleInput}
             className={Styles["form__field-input"]}
-            type="password"
             name="password"
+            type="password"
             placeholder="***********"
           />
         </label>
