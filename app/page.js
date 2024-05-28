@@ -1,5 +1,4 @@
 'use client';
-
 import { endpoints } from "./api/config";
 import { Banner } from "./components/Banner/Banner";
 import { CardsListSection } from "./components/CardsListSection/CardsListSection";
