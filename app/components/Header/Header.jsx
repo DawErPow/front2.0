@@ -1,54 +1,62 @@
 "use client";
+
+import { useState } from "react";
+
 import Styles from "./Header.module.css";
-import { useState, useEffect } from "react";
-import { AuthForm } from "../AuthForm/AuthForm";
 import { Overlay } from "../Overlay/Overlay";
 import { Popup } from "../Popup/Popup";
+import { AuthForm } from "../AuthForm/AuthForm";
+
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useStore } from "@/app/store/app-store" 
+
+import { useStore } from "@/app/store/app-store";
 
 export const Header = () => {
   const [popupIsOpened, setPopupIsOpened] = useState(false);
-  
 
   const authContext = useStore();
 
   const openPopup = () => {
     setPopupIsOpened(true);
   };
-
   const closePopup = () => {
     setPopupIsOpened(false);
   };
 
+  const pathname = usePathname();
+
   const handleLogout = () => {
     authContext.logout();
   };
-
-  const pathname = usePathname();
-
-  
-
   return (
     <header className={Styles["header"]}>
-      <a href="/" className={Styles["logo"]}>
-        <img
-          className={Styles["logo__image"]}
-          src="./images/logo.svg"
-          alt="Логотип Pindie"
-        ></img>
-      </a>
+      {pathname === "/" ? (
+        <span className={Styles["logo"]}>
+          <img
+            className={Styles["logo__image"]}
+            src="/images/logo.svg"
+            alt="Логотип Pindie"
+          />
+        </span>
+      ) : (
+        <Link href="/" className={Styles["logo"]}>
+          <img
+            className={Styles["logo__image"]}
+            src="/images/logo.svg"
+            alt="Логотип Pindie"
+          />
+        </Link>
+      )}
       <nav className={Styles["menu"]}>
         <ul className={Styles["menu__list"]}>
           <li className={Styles["menu__item"]}>
             <Link
               href="/new"
               className={`${Styles["menu__link"]} ${
-                pathname === "/new" ? Styles["menu__link_active"] : ""
+                pathname === "/new" && Styles["menu__link_active"]
               }`}
             >
-              {" "}
               Новинки
             </Link>
           </li>
@@ -56,7 +64,7 @@ export const Header = () => {
             <Link
               href="/popular"
               className={`${Styles["menu__link"]} ${
-                pathname === "/popular" ? Styles["menu__link_active"] : ""
+                pathname === "/popular" && Styles["menu__link_active"]
               }`}
             >
               Популярные
@@ -66,7 +74,7 @@ export const Header = () => {
             <Link
               href="/shooters"
               className={`${Styles["menu__link"]} ${
-                pathname === "/shooters" ? Styles["menu__link_active"] : ""
+                pathname === "/shooters" && Styles["menu__link_active"]
               }`}
             >
               Шутеры
@@ -76,17 +84,17 @@ export const Header = () => {
             <Link
               href="/runners"
               className={`${Styles["menu__link"]} ${
-                pathname === "/runner" ? Styles["menu__link_active"] : ""
+                pathname === "/runners" && Styles["menu__link_active"]
               }`}
             >
-              Ранеры
+              Раннеры
             </Link>
           </li>
           <li className={Styles["menu__item"]}>
             <Link
               href="/pixel-games"
               className={`${Styles["menu__link"]} ${
-                pathname === "/pixel" ? Styles["menu__link_active"] : ""
+                pathname === "/pixel-games" && Styles["menu__link_active"]
               }`}
             >
               Пиксельные
@@ -94,9 +102,9 @@ export const Header = () => {
           </li>
           <li className={Styles["menu__item"]}>
             <Link
-              href="/TDS"
+              href="/tds"
               className={`${Styles["menu__link"]} ${
-                pathname === "/TDS" ? Styles["menu__link_active"] : ""
+                pathname === "/tds" && Styles["menu__link_active"]
               }`}
             >
               TDS
@@ -115,8 +123,8 @@ export const Header = () => {
           )}
         </div>
       </nav>
-      <Overlay popupIsOpened={popupIsOpened} closePopup={closePopup}/>
-      <Popup popupIsOpened={popupIsOpened} closePopup={closePopup}>
+      <Overlay isOpened={popupIsOpened} close={closePopup} />
+      <Popup isOpened={popupIsOpened} close={closePopup}>
         <AuthForm close={closePopup} />
       </Popup>
     </header>
