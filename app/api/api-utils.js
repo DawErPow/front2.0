@@ -16,12 +16,11 @@ export const isResponseOk = (response) => {
 }
 
 const normalizeDataObject = (obj) => {
-  let str = JSON.stringify(obj)
-  
-  str = str.replaceAll('_id', 'id');
-  const newObj = JSON.parse(str)
-  const result = { ...newObj, category: newObj.categories }
-  return result;
+  return {
+    ...obj,
+    category: obj.categories,
+    users: obj.users_permissions_users,
+  }
 }
 
 export const normalizeData = (data) => {
@@ -110,7 +109,7 @@ export const vote = async (url, jwt, usersArray) => {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${jwt}`,
       },
-      body: JSON.stringify({ users: usersArray })
+      body: JSON.stringify({ users_permissions_users: usersArray }),
     })
     if (response.status !== 200) {
       throw new Error('Ошибка голосования')
